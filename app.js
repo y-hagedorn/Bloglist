@@ -6,11 +6,10 @@ const blogsRouter = require('./controllers/blogs')
 const logger = require('./utils/logger')
 const mongoose = require('mongoose')
 
-//mongoose.set('strictQuery', false)
+mongoose.set('strictQuery', false)
 
-//logger.info('connecting to', config.MONGODB_URI)
+logger.info('connecting to', config.MONGODB_URI)
 
-//const Blog = mongoose.model('Blog', blogSchema)
 const mongoUrl = config.MONGODB_URI
 
 mongoose.connect(mongoUrl)
@@ -22,7 +21,7 @@ mongoose.connect(mongoUrl)
   })
 
 app.use(cors())
-//app.use(express.static('dist'))
+
 app.use(express.json())
 
 // Router
