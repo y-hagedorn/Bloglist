@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Fullstack Open Course",
+    "author": "Matti Luukkainen",
+    "url": "https://fullstackopen.com/en/",
+    "likes": 7
+}
