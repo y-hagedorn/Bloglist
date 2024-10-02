@@ -75,7 +75,7 @@ test('blog posts have the id field instead of _id', async () => {
   assert(!blog._id, 'The blog post should not have an "_id" field')
 })
 
-test('a valid blog post can be added ', async () => {
+test('a valid blog post can be added', async () => {
   const newBlog = {
     "title": "Fullstack Open Course",
     "author": "Matti Luukkainen",
@@ -93,6 +93,27 @@ test('a valid blog post can be added ', async () => {
   const titles = response.body.map(r => r.title)
   assert.strictEqual(response.body.length, initialBlogs.length + 1)
   assert(titles.includes('Fullstack Open Course'))
+})
+
+test('if the likes property is missing from the request, it will default to the value 0', async () => {
+  const newBlog = {
+    "title": "Fullstack Open Course",
+    "author": "Matti Luukkainen",
+    "url": "https://fullstackopen.com/en/",
+}
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+  const titles = response.body.map(r => r.title)
+  assert.strictEqual(response.body.length, initialBlogs.length + 1)
+  const createdBlog = response.body.find(blog => blog.title === 'Fullstack Open Course')
+  assert(createdBlog, 'The blog should have been added')
+  assert.strictEqual(createdBlog.likes, 0, 'The likes property should default to 0 when missing')
 })
 
 after(async () => {
