@@ -73,7 +73,27 @@ test('blog posts have the id field instead of _id', async () => {
   const blog = response.body[0]
   assert(blog.id, 'The blog post should have an "id" field')
   assert(!blog._id, 'The blog post should not have an "_id" field')
-});
+})
+
+test('a valid blog post can be added ', async () => {
+  const newBlog = {
+    "title": "Fullstack Open Course",
+    "author": "Matti Luukkainen",
+    "url": "https://fullstackopen.com/en/",
+    "likes": 7
+}
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+  const titles = response.body.map(r => r.title)
+  assert.strictEqual(response.body.length, initialBlogs.length + 1)
+  assert(titles.includes('Fullstack Open Course'))
+})
 
 after(async () => {
   await mongoose.connection.close()
