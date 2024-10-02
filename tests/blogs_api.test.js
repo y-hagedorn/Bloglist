@@ -49,8 +49,8 @@ const initialBlogs = [
 beforeEach(async () => {
   await Blog.deleteMany({})
   for (const blog of initialBlogs) {
-    let blogObject = new Blog(blog);
-    await blogObject.save();
+    let blogObject = new Blog(blog)
+    await blogObject.save()
   }
 })
 
@@ -65,6 +65,15 @@ test('there are as many blogs as saved to the database', async () => {
   const response = await api.get('/api/blogs')
   assert.strictEqual(response.body.length, initialBlogs.length)
 })
+
+test('blog posts have the id field instead of _id', async () => {
+  const response = await api.get('/api/blogs')
+  assert(response.body.length > 0, 'There should be at least one blog post')
+  
+  const blog = response.body[0]
+  assert(blog.id, 'The blog post should have an "id" field')
+  assert(!blog._id, 'The blog post should not have an "_id" field')
+});
 
 after(async () => {
   await mongoose.connection.close()
