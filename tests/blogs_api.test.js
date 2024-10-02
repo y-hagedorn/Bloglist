@@ -116,6 +116,34 @@ test('if the likes property is missing from the request, it will default to the 
   assert.strictEqual(createdBlog.likes, 0, 'The likes property should default to 0 when missing')
 })
 
+test('if the title is missing, the backend responds with 400 Bad Request', async () => {
+  const newBlogWithoutTitle = {
+    author: "Matti Luukkainen",
+    url: "https://fullstackopen.com/en/",
+    likes: 7
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlogWithoutTitle)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+})
+
+test('if the url is missing, the backend responds with 400 Bad Request', async () => {
+  const newBlogWithoutUrl = {
+    title: "Fullstack Open Course",
+    author: "Matti Luukkainen",
+    likes: 7
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlogWithoutUrl)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
