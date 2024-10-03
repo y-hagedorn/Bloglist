@@ -2,53 +2,17 @@ const { test, after, beforeEach } = require('node:test')
 const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
+const helper = require('./test_helper')
 const app = require('../app')
 const Blog = require('../models/blog')
 
 const api = supertest(app)
 
-const initialBlogs = [
-  {
-    title: "React patterns",
-    author: "Michael Chan",
-    url: "https://reactpatterns.com/",
-    likes: 7,
-  },
-  {
-    title: "Go To Statement Considered Harmful",
-    author: "Edsger W. Dijkstra",
-    url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
-    likes: 5,
-  },
-  {
-    title: "Canonical string reduction",
-    author: "Edsger W. Dijkstra",
-    url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
-    likes: 12,
-  },
-  {
-    title: "First class tests",
-    author: "Robert C. Martin",
-    url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
-    likes: 10,
-  },
-  {
-    title: "TDD harms architecture",
-    author: "Robert C. Martin",
-    url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
-    likes: 0,
-  },
-  {
-    title: "Type wars",
-    author: "Robert C. Martin",
-    url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
-    likes: 2,
-  }
-]
 
 beforeEach(async () => {
   await Blog.deleteMany({})
-  for (const blog of initialBlogs) {
+
+  for (const blog of helper.initialBlogs) {
     let blogObject = new Blog(blog)
     await blogObject.save()
   }
@@ -63,7 +27,7 @@ test('blogs are returned as json', async () => {
 
 test('there are as many blogs as saved to the database', async () => {
   const response = await api.get('/api/blogs')
-  assert.strictEqual(response.body.length, initialBlogs.length)
+  assert.strictEqual(response.body.length, helper.initialBlogs.length)
 })
 
 test('blog posts have the id field instead of _id', async () => {
@@ -89,9 +53,9 @@ test('a valid blog post can be added', async () => {
     .expect(201)
     .expect('Content-Type', /application\/json/)
 
-  const response = await api.get('/api/blogs')
-  const titles = response.body.map(r => r.title)
-  assert.strictEqual(response.body.length, initialBlogs.length + 1)
+  const blogsAtEnd = await helper.blogsInDb()
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+  const titles = blogsAtEnd.map(b => b.title)
   assert(titles.includes('Fullstack Open Course'))
 })
 
@@ -108,10 +72,9 @@ test('if the likes property is missing from the request, it will default to the 
     .expect(201)
     .expect('Content-Type', /application\/json/)
 
-  const response = await api.get('/api/blogs')
-  const titles = response.body.map(r => r.title)
-  assert.strictEqual(response.body.length, initialBlogs.length + 1)
-  const createdBlog = response.body.find(blog => blog.title === 'Fullstack Open Course')
+  const blogsAtEnd = await helper.blogsInDb()
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+  const createdBlog = blogsAtEnd.find(blog => blog.title === 'Fullstack Open Course')
   assert(createdBlog, 'The blog should have been added')
   assert.strictEqual(createdBlog.likes, 0, 'The likes property should default to 0 when missing')
 })
