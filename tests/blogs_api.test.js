@@ -111,6 +111,25 @@ describe('addition of a new blog post', () => {
   })
 })
 
+describe('updating a blog post', () => {
+  test('updating the likes of a blog post', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+    const updatedLikes = {
+      likes: 42
+    }
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updatedLikes)
+      .expect(200)
+
+      const blogsAtEnd = await helper.blogsInDb()
+      assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+      assert.strictEqual(blogsAtEnd[0].likes, updatedLikes.likes)
+  })
+})
+
 describe('deletion of a blog post', () => {
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
