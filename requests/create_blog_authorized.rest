@@ -1,6 +1,6 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY2ZmZmOTliYTAxZjQxMzk0NDZlNWNkNyIsImlhdCI6MTcyODA2NjQwM30.HRZPIK9SGHbJenBvVkasgvvGgAfUm4terH0elDoi_ns
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY2ZmZmOTliYTAxZjQxMzk0NDZlNWNkNyIsImlhdCI6MTcyODA2NzYwMX0.--TDq_yZyV1JfEqFefoLzvlORiEri38yFw7o1jwL174
 
 {
     "title": "Type wars",
