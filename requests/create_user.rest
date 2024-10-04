@@ -6,3 +6,14 @@ Content-Type: application/json
     "name": "Elon Musk",
     "password": "starlink"
 }
+
+###
+
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "root",
+    "name": "Superuser",
+    "password": "salainen"
+}
