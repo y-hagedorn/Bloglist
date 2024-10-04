@@ -1,0 +1,17 @@
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+    "username": "root",
+    "password": "false"
+}
+
+###
+
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+    "username": "react",
+    "password": "false"
+}
