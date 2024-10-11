@@ -49,6 +49,7 @@ blogsRouter.put('/:id', async (request, response) => {
   const body = request.body
 
   const blog = {
+    user: body.user,
     title: body.title,
     author: body.author,
     url: body.url,
@@ -56,6 +57,9 @@ blogsRouter.put('/:id', async (request, response) => {
   }
 
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+  if (!updatedBlog) {
+    return response.status(404).json( {error: 'Blog not found'} )
+  }
   response.json(updatedBlog)
 })
 
